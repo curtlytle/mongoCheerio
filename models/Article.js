@@ -9,11 +9,17 @@ var ArticleSchema = new Schema({
     // `title` is required and of type String
     title: {
         type: String,
+        trim: true,
         required: true
+    },
+    summary: {
+        type: String,
+        trim: true
     },
     // `link` is required and of type String
     link: {
         type: String,
+        trim: true,
         required: true
     },
     // `note` is an object that stores a Note id
