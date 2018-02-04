@@ -1,13 +1,3 @@
-// Grab the articles as a json
-$.getJSON("/articles", function (data) {
-    // For each one
-    for (var i = 0; i < data.length; i++) {
-        // Display the apropos information on the page
-        $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
-    }
-});
-
-
 // Whenever someone clicks a p tag
 $(document).on("click", "p", function () {
     // Empty the notes from the note section
@@ -33,11 +23,11 @@ $(document).on("click", "p", function () {
             $("#notes").append("<button data-id='" + data._id + "' id='savenote'>Save Note</button>");
 
             // If there's a note in the article
-            if (data.note) {
+            if (data.notes[0]) {
                 // Place the title of the note in the title input
-                $("#titleinput").val(data.note.title);
+                $("#titleinput").val(data.notes[0].title);
                 // Place the body of the note in the body textarea
-                $("#bodyinput").val(data.note.body);
+                $("#bodyinput").val(data.notes[0].body);
             }
         });
 });
@@ -70,3 +60,9 @@ $(document).on("click", "#savenote", function () {
     $("#titleinput").val("");
     $("#bodyinput").val("");
 });
+
+/*
+$(document).on("click", "#savenote", function () {
+    $("#testmodal").show();
+});
+*/
