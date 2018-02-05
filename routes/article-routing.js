@@ -1,23 +1,23 @@
 // Require all models
-var db = require("../models");
-var axios = require("axios");
-var cheerio = require("cheerio");
+let db = require("../models");
+let axios = require("axios");
+let cheerio = require("cheerio");
 
 module.exports = function (app) {
     app.get("/scrape", function (req, res) {
-        var scrapeArray = [];
+        let scrapeArray = [];
         // First, we grab the body of the html with request
         axios.get("http://www.ksl.com/").then(function (response) {
             // Then, we load that into cheerio and save it to $ for a shorthand selector
-            var $ = cheerio.load(response.data);
+            let $ = cheerio.load(response.data);
 
             $("div.top_story_info").each(function (i, element) {
-                var result = {};
+                let result = {};
 
                 // Add the text and href of every link, and save them as properties of the result object
                 result.title = $(element).find("h1").text();
                 result.summary = $(element).find("h2").text();
-                var tmplink = $(element).find("a").attr("href");
+                let tmplink = $(element).find("a").attr("href");
                 if (tmplink.includes("http://www.ksl.com/")) {
                     result.link = tmplink;
                 } else {
@@ -28,12 +28,12 @@ module.exports = function (app) {
             });
 
             $("div.top_picks h2").each(function (i, element) {
-                var result = {};
+                let result = {};
 
                 // Add the text and href of every link, and save them as properties of the result object
                 result.title = $(element).find("a").text();
                 result.summary = "top_pick";
-                var tmplink = $(element).find("a").attr("href");
+                let tmplink = $(element).find("a").attr("href");
                 if (tmplink.includes("http://www.ksl.com/")) {
                     result.link = tmplink;
                 } else {
@@ -46,12 +46,12 @@ module.exports = function (app) {
             // Now, we grab every h2 within an article tag, and do the following:
             $("div.headline").each(function (i, element) {
                 // Save an empty result object
-                var result = {};
+                let result = {};
 
                 // Add the text and href of every link, and save them as properties of the result object
                 result.title = $(element).find("h2").find("a").text();
                 result.summary = $(element).find("h5").text();
-                var tmplink = $(element).find("h2").find("a").attr("href");
+                let tmplink = $(element).find("h2").find("a").attr("href");
                 if (tmplink.includes("http://www.ksl.com/")) {
                     result.link = tmplink;
                 } else {
@@ -61,8 +61,8 @@ module.exports = function (app) {
                 scrapeArray.push(result);
             });
 
-            for (var i = 0; i < scrapeArray.length; i++) {
-                var art = scrapeArray[i];
+            for (let i = 0; i < scrapeArray.length; i++) {
+                let art = scrapeArray[i];
                 db.Article.findOneAndUpdate({link: art.link}, {
                     $set: {
                         title: art.title,
