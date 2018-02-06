@@ -42,8 +42,26 @@ $(document).on("click", "#showNotes", function () {
     // With that done, add the note information to the page
         .done(function (data) {
             console.log(data);
-            $("#notesModal").empty();
-            $("#notesModal").append("<h2>" + data.title + "</h2>");
+            $("#notesModalTitle").empty();
+            $("#notesModalTitle").append("<h2>" + data.title + "</h2>");
+            // $()
+
+            $("#notesSection").empty();
+            for (let i=0; i < data.notes.length; i++) {
+                let $div = $("<div>", {id: data.notes[i]._id, class: "note", text: data.notes[i].body});
+                let $dbutton = $("<button>", {class: "btn btn-danger", type: "button"});
+                $dbutton.attr('data-id', data.notes[i]._id);
+                $div.append($dbutton);
+                $("#notesSection").append($div);
+            }
+
+            $("#modalfoot").empty();
+            let $closeButton = $("<button>", {class: "btn btn-secondary", type: "button", text: "Close"});
+            $closeButton.attr('data-dismiss', 'modal');
+            let $saveButton = $("<button>", {class: "btn btn-primary", type: "button", text: "Save Note"});
+
+            $("#modalfoot").append($closeButton);
+            $("#modalfoot").append($saveButton);
         });
 });
 
