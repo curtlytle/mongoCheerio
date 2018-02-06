@@ -4,7 +4,7 @@ let axios = require("axios");
 let cheerio = require("cheerio");
 
 module.exports = function (app) {
-    app.get("/scrape", function (req, res) {
+    app.get("/", function (req, res) {
         let scrapeArray = [];
         // First, we grab the body of the html with request
         axios.get("http://www.ksl.com/").then(function (response) {
@@ -63,6 +63,7 @@ module.exports = function (app) {
 
             for (let i = 0; i < scrapeArray.length; i++) {
                 let art = scrapeArray[i];
+
                 db.Article.findOneAndUpdate({link: art.link}, {
                     $set: {
                         title: art.title,
@@ -71,7 +72,8 @@ module.exports = function (app) {
                     }
                 }, {
                     new: true,
-                    upsert: true
+                    upsert: true,
+                    setDefaultsOnInsert: true
                 }, function (err, doc) {
                     if (err) {
                         console.log("Something wrong when updating data!");
@@ -81,19 +83,32 @@ module.exports = function (app) {
                 });
 
             }
-            res.send("Scrape Complete");
+
+            db.Article
+                .find({saved: false})
+                .then(function (dbArticles) {
+                    // If we were able to successfully find Articles, send them back to the client
+                    //res.json(dbArticles);
+                    res.render("index", {
+                        articles: dbArticles
+                    });
+                })
+                .catch(function (err) {
+                    // If an error occurred, send it to the client
+                    res.json(err);
+                });
         });
     });
 
 // Route for getting all Articles from the db
-    app.get("/", function (req, res) {
+    app.get("/savedArticles", function (req, res) {
         // Grab every document in the Articles collection
         db.Article
-            .find({})
+            .find({saved: true})
             .then(function (dbArticles) {
                 // If we were able to successfully find Articles, send them back to the client
                 //res.json(dbArticles);
-                res.render("index", {
+                res.render("savedArticles", {
                     articles: dbArticles
                 });
             })
@@ -146,6 +161,22 @@ module.exports = function (app) {
             .then(function (dbArticle) {
                 // If we were able to successfully update an Article, send it back to the client
                 res.json(dbArticle);
+            })
+            .catch(function (err) {
+                // If an error occurred, send it to the client
+                res.json(err);
+            });
+    });
+
+    app.post("/saveArticle/:id", function (req, res) {
+        // Create a new note and pass the req.body to the entry
+        console.log("... saving article id: " + req.params.id);
+        db.Article
+            .findOneAndUpdate({_id: req.params.id}, {saved: true}, {new: true})
+            .then(function (dbArticle) {
+                // If we were able to successfully update an Article, send it back to the client
+                //res.json(dbArticle);
+                res.sendFile(path.join(__dirname, "index.html"));
             })
             .catch(function (err) {
                 // If an error occurred, send it to the client

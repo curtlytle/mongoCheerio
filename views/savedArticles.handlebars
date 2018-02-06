@@ -24,27 +24,46 @@
 
 <div class="container">
     <div class="jumbotron">
-        <h1>KSL News Articles</h1>
+        <h1>Saved Articles</h1>
         <hr>
-        <h3><i>List of Current News Articles from KSL</i></h3>
+        <h3><i>List of Saved Articles from KSL</i></h3>
+
     </div>
 </div>
-
 <div id="articles" class="container">
     {{#each articles}}
-        {{#if saved}}
-        {{else}}
         <div class="row">
             <div class="col-md-1"></div>
             <div class="col-md-10">
                 <p data-id='{{_id}}'>{{title}}<br/>{{link}}</p>
             </div>
             <div class="col-md-1">
-                <button data-id='{{_id}}' id="saveArticle" type="button" class="btn btn-primary">
-                    Save Article
+                <button data-id='{{_id}}' id="showNotes" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                    Article Notes
                 </button>
             </div>
         </div>
-        {{/if}}
     {{/each}}
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="notesModal">
+                Woohoo, got a modal to work.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
 </div>
