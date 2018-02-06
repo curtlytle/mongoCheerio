@@ -175,8 +175,7 @@ module.exports = function (app) {
             .findOneAndUpdate({_id: req.params.id}, {saved: true}, {new: true})
             .then(function (dbArticle) {
                 // If we were able to successfully update an Article, send it back to the client
-                //res.json(dbArticle);
-                res.sendFile(path.join(__dirname, "index.html"));
+                res.json(dbArticle);
             })
             .catch(function (err) {
                 // If an error occurred, send it to the client
