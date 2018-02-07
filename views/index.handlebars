@@ -1,50 +1,50 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Mongo KSL Scraper</a>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #002e5d;">
+    <a class="navbar-brand" href="/">Mongo KSL Scraper</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText"
             aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarText">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-            </li>
             <li class="nav-item">
                 <a class="nav-link" href="/savedArticles">Saved Articles</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Pricing</a>
-            </li>
         </ul>
         <span class="navbar-text">
-      Homepage retrieves current KSL articles
+      This page automatically retrieves current KSL articles
     </span>
     </div>
 </nav>
 
 <div class="container">
-    <div class="jumbotron">
+    <div class="row">
+        <div class="col-md-12 myjumbo">
         <h1>KSL News Articles</h1>
-        <hr>
-        <h3><i>List of Current News Articles from KSL</i></h3>
+        </div>
     </div>
 </div>
 
 <div id="articles" class="container">
-    {{#each articles}}
-        {{#if saved}}
-        {{else}}
+{{#each articles}}
+    {{#if saved}}
+    {{else}}
+        </div>
         <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-10">
-                <p data-id='{{_id}}'>{{title}}<br/>{{link}}</p>
+            <div class="col-md-10 titlerow">
+                <a href="{{link}}" target="_blank">{{title}}</a>
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2">
                 <button data-id='{{_id}}' id="saveArticle" type="button" class="btn btn-primary">
                     Save Article
                 </button>
             </div>
         </div>
-        {{/if}}
-    {{/each}}
+        <div class="row summaryrow">
+            <div class="col-md-12">
+                {{summary}}
+            </div>
+        </div>
+        <hr>
+    {{/if}}
+{{/each}}
 </div>

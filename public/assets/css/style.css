@@ -1,14 +1,25 @@
 .note {
     padding: 5px;
+    border: 1px;
 }
-#chatText {
-    width: 600px;
-    float: left;
+.deletenotebutton {
     margin-left: 55px;
 }
 
-.chatP {
-    margin: 0px;
+.summaryrow {
+    margin-bottom: 15px;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+.myjumbo {
+    background-image: url("../images/kslscraper.jpg");
+    color: white;
+    text-align: center;
+}
+
+.titlerow {
+    font-size: 22px;
 }
 
 .clearfix::after {

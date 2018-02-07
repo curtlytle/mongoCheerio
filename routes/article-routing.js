@@ -100,7 +100,7 @@ module.exports = function (app) {
         });
     });
 
-// Route for getting all Articles from the db
+// Route for getting all saved Articles from the db
     app.get("/savedArticles", function (req, res) {
         // Grab every document in the Articles collection
         db.Article
@@ -136,7 +136,7 @@ module.exports = function (app) {
     });
 
 // Route for saving/updating an Article's associated Note
-    app.post("/articles/:id", function (req, res) {
+    app.post("/saveArticleNote/:id", function (req, res) {
         // Create a new note and pass the req.body to the entry
         db.Note
             .create(req.body)
@@ -145,18 +145,9 @@ module.exports = function (app) {
                 // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
                 // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
                 //return db.Article.findOneAndUpdate({_id: req.params.id}, {note: dbNote._id}, {new: true});
-                //return db.Article.findOneAndUpdate({_id: req.params.id}, {$push: {notes: dbNote._id}}, {new: true});
+                return db.Article.findOneAndUpdate({_id: req.params.id}, {$push: {notes: dbNote._id}}, {new: true});
                 //return db.Article.findOneAndUpdate({_id: req.params.id}, {$set: {notes: dbNote._id}}, {new: true});
-                return db.Article.findOne({_id: req.params.id}, function(err, article) {
-                    if (article.notes == null) {
-                        article.notes.push(dbNote);
-                    } else {
-                        article.notes[0] = dbNote;
-                    }
-                    article.save(function (err) {
-                        // handle errs
-                    });
-                });
+
             })
             .then(function (dbArticle) {
                 // If we were able to successfully update an Article, send it back to the client
@@ -170,7 +161,6 @@ module.exports = function (app) {
 
     app.post("/saveArticle/:id", function (req, res) {
         // Create a new note and pass the req.body to the entry
-        console.log("... saving article id: " + req.params.id);
         db.Article
             .findOneAndUpdate({_id: req.params.id}, {saved: true}, {new: true})
             .then(function (dbArticle) {
@@ -181,5 +171,19 @@ module.exports = function (app) {
                 // If an error occurred, send it to the client
                 res.json(err);
             });
+    });
+
+    app.delete("/deleteArticle/:id", function (req, res) {
+        db.Article.remove({_id: req.params.id}, function (err) {
+            res.end();
+        });
+    });
+
+    app.delete("/deleteNote/:id", function (req, res) {
+        console.log("... deleting note: " + req.params.id);
+        db.Note.remove({_id: req.params.id}, function (err) {
+        }).then(function (data) {
+            res.json(data);
+        });
     });
 };
