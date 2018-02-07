@@ -42,6 +42,16 @@ function showNoteStuff(articleId) {
 
 }
 
+$(document).on("click", "#scrapeArticles", function () {
+    $.ajax({
+        method: "GET",
+        url: "/scrapeArticles"
+    })
+        .done(function (data) {
+            location.reload();
+        });
+});
+
 $(document).on("click", "#deleteArticle", function () {
     let thisId = $(this).attr("data-id");
 

@@ -4,7 +4,7 @@ let axios = require("axios");
 let cheerio = require("cheerio");
 
 module.exports = function (app) {
-    app.get("/", function (req, res) {
+    app.get("/scrapeArticles", function (req, res) {
         let scrapeArray = [];
         // First, we grab the body of the html with request
         axios.get("http://www.ksl.com/").then(function (response) {
@@ -78,26 +78,26 @@ module.exports = function (app) {
                     if (err) {
                         console.log("Something wrong when updating data!");
                     }
-
-                    //console.log(doc);
                 });
-
             }
-
-            db.Article
-                .find({saved: false})
-                .then(function (dbArticles) {
-                    // If we were able to successfully find Articles, send them back to the client
-                    //res.json(dbArticles);
-                    res.render("index", {
-                        articles: dbArticles
-                    });
-                })
-                .catch(function (err) {
-                    // If an error occurred, send it to the client
-                    res.json(err);
-                });
         });
+        res.redirect("/");
+    });
+
+    app.get("/", function(req, res) {
+        db.Article
+            .find({saved: false})
+            .then(function (dbArticles) {
+                // If we were able to successfully find Articles, send them back to the client
+                //res.json(dbArticles);
+                res.render("index", {
+                    articles: dbArticles
+                });
+            })
+            .catch(function (err) {
+                // If an error occurred, send it to the client
+                res.json(err);
+            });
     });
 
 // Route for getting all saved Articles from the db
